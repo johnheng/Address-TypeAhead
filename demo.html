@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Address TypeAhead Demo</title>
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,900,300,100,700" rel="stylesheet" type="text/css">
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <link rel="stylesheet" href="assets/bootstrap.css">
+        <link rel="stylesheet" href="assets/main.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="assets/knockout-3.4.0.js"></script>
+    </head>
+    <body>
+        <header id="page_header" class="page-header fixed-header">
+            <div class="header-inner header-container">
+                <button type="button" data-toggle="collapse" class="navbar-toggle material-btn">
+                    <div class="material-hamburger hidden-sm hidden-md hidden-lg">
+                        <div class="material-patty"></div>
+                        <div class="material-patty"></div>
+                        <div class="material-patty"></div>
+                        <div class="menu">MENU</div>
+                    </div>
+                </button>
+                <a href="/" class="logo-brand"><img id="brand-logo" src="assets/brand-logo.png"></a>
+
+                <div id="background" style="display:none;"></div>
+
+                <div id="collapse-container">
+                    <div id="navbar-collapse" class="collapse navbar-collapse">
+                        <span class="border-right"></span>
+                        <div class="effect-parent">
+                            <div class="qs-inner">
+                                <form action="/PropertyListing/LocalitySearch" id="cityzipform-nav" method="post" novalidate="novalidate"> 
+                                    <div>
+                                        <div id="search-input-container">
+                                            <span class="fa fa-search fa-fw"></span>
+                                            <span class="effect-ruri">
+                                                <input name="Locality" data-val="true" autocomplete="off" data-val-required="Location is Required" id="quick_search_input" type="text" class="typeahead qs-field effect-field">
+                                                <label for="quick_search_input" class="effect-label"><span class="effect-label-content">Search <span class="hidden-xs hidden-sm hidden-md">Zero Closing Cost </span>Homes</span></label>
+                                            </span>
+                                            <button class="qs-button icon-close-thin mobile-search-close visible-xs"></button>
+                                            <button type="submit" class="qs-button icon-search mobile-search visible-xs"></button>
+                                        </div>
+                                        <div id="cityzipform-typeahead" class="typeahead" style="display:none;">
+                                            <div class="subsection" data-bind="foreach: listings">
+                                                <!-- ko if: listings.length > 0 -->
+                                                    <div class="heading">
+                                                        <!-- ko if: type.toLowerCase() == "listings"-->
+                                                        <span class="fa fa-home fa-lg fa-fw"></span>
+                                                        <!-- /ko -->
+                                                        <!-- ko if: type.toLowerCase() == "neighborhoods" || type.toLowerCase() == "places" -->
+                                                        <span class="fa fa-map-marker fa-lg fa-fw"></span>
+                                                        <!-- /ko -->
+                                                        <text data-bind="text: type"></text>
+                                                    </div>
+                                                    <!-- ko foreach: listings-->
+                                                        <!-- ko if: $parent.type.toLowerCase() == "listings"-->
+                                                        <a data-bind="attr: { href: '/PropertyListing/Property/' + id + '?1=1&Locality=' + $('#quick_search_input').val() + '&SortDirection=recent&ItemsPerPage=15&CurrentPageIndex=0'}">
+                                                            <div class="listing">
+                                                                <text data-bind="text: address + ' - ' + bedrooms + ' Bed | ' + bathCount + ' Bath | ' + formatCurrencyVal(listPrice)"></text>
+                                                            </div>
+                                                        </a>
+                                                        <!-- /ko -->
+                                                        <!-- ko ifnot: $parent.type.toLowerCase() == "listings"-->
+                                                
+                                                <a data-bind="attr: { href: '/PropertyListing/SearchResultsPage?1=1&Locality=' + place + '&SortDirection=recent&ItemsPerPage=15&CurrentPageIndex=0#display-list'}">
+                                                    <div class="listing">
+                                                        <text data-bind="text: place + ' - Homes'"></text>
+                                                    </div>
+                                                </a>
+                                                        <!-- /ko -->
+                                                    <!-- /ko -->
+                                                <!-- /ko -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        <div id="nav-menu">
+                            <ul class="menu">
+                                <li class="hidden-sm hidden-md hidden-lg"><a href="/TodaysRates/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-star fa-fw fa-lg hidden-sm hidden-md hidden-lg"></span> Today's Rates</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-usd fa-fw fa-lg hidden-sm hidden-md hidden-lg"></span>Refinance</a>
+                                    <div class="arrow-up"></div>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/QuickQuote/Refinance">Get A Quote</a></li>
+                                        <li><a href="/QuickQuote/Refinance">Apply for Refinance</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-home fa-fw fa-lg hidden-sm hidden-md hidden-lg"></span>Buy A Home</a>
+                                    <div class="arrow-up"></div>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/PropertyListing/LocalitySearch">Find A Home</a></li>
+                                        <li><a href="/QuickQuote/PreApproval">Get Pre-Approved</a></li>
+                                        <li><a href="/QuickQuote/Buy">Get A Quote</a></li>
+                                        <li><a href="/QuickQuote/Buy">Apply for Purchase</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown"><a href="/Application/Sell" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-tag fa-fw fa-lg hidden-sm hidden-md hidden-lg"></span> Sell My Home</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-paper-plane fa-fw fa-lg hidden-sm hidden-md hidden-lg"></span>Resources</a>
+                                    <div class="arrow-up"></div>
+                                    <ul class="dropdown-menu">
+                                        <li class="hidden-xs"><a href="/todaysrates">Today’s Rates</a></li>
+                                        <li><a href="/content/more/glossary">Common Terminology</a></li>
+                                        <li><a href="/content/more/faqs">Frequent Questions</a></li>
+                                        <li><a href="http://files.consumerfinance.gov/f/201503_cfpb_your-home-loan-toolkit-web.pdf" target="_blank">Loan Toolkit</a></li>
+                                        <li><a href="/content/more/loanlimits">Loan Limits</a></li>
+                                        <li><a href="/content/more/process#section-sell" rel="process">Selling Guide</a></li>
+                                        <li><a href="/content/more/process#section-buy" rel="process">Buying Guide</a></li>
+                                        <li><a href="/content/more/process#section-refi" rel="process">Refinancing Guide</a></li>
+                                        <li><a href="http://files.consumerfinance.gov/f/201401_cfpb_booklet_charm.pdf" target="_blank">Consumer ARM Handbook</a></li>
+                                        <li><a href="/content/more/standard_forms">Standard Forms</a></li>
+                                        <li><a href="/content/more/about_us">About Us</a></li>
+                                        <li><a href="/content/more/our_team">Meet Our Team</a></li>
+                                        <li><a href="/content/more/attorneys">Find Approved Attorneys</a></li>
+                                        <li><a href="https://workforcenow.adp.com/jobs/apply/posting.html?client=capcenter&ccId=19000101_000001&type=MP&lang=en_US" target="_blank">Careers</a></li>
+                                        <li><a href="http://www.zeroclosingcostmortgage.com" target="_blank">CapCenter Blog</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="border-right"></span>
+                        <div id="nav-more">
+                            <ul class="menu">
+                                <li><a id="join-link" href ="/Contact/">Contact Us</a></li>
+                                <li class="sign-in"><a href="/Home/Login">Log In</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <script>
+            function TaskListViewModel() {
+                var self = this;
+                self.listings = ko.observableArray([]);
+            }
+            var listings = new TaskListViewModel();
+            ko.applyBindings(listings);
+
+            function loadListings(search) {
+                if ($("#quick_search_input").is(":focus") && search != "") {
+                    var results = ajaxListings(search);
+
+                    if ($("#cityzipform-typeahead").is(":hidden") && results.length > 0) {
+                        $("#cityzipform-typeahead").slideDown();
+                    }
+                }
+                else {
+                    clearListings();
+                }
+            }
+
+            function clearListings() {
+                $("#cityzipform-typeahead .listing, #cityzipform-typeahead .heading").remove();
+                $("#cityzipform-typeahead").slideUp();
+            }
+
+            function ajaxListings(address) {
+                var results = [];
+
+                //do an ajax search here
+                $.ajax({
+                    url: "https://www.capcenter.com/api/AddressServices/GetAddresses",
+                    data: { search: address },
+                    method: "get",
+                    dataType: "json",
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(xhr);
+                    },
+                    success: function (content) {
+                        if (content.length > 0) {
+                            $.each(content, function (key, value) {
+                                if (content[key] != null) {
+                                    results.push(content[key]);
+                                }
+                            });
+                            console.log(results);
+                            listings.listings(results);
+                            if (results.length > 0) {
+                                $("#cityzipform-typeahead").slideDown();
+                            }
+                            else {
+                                $("#cityzipform-typeahead").hide();
+                            }
+                            
+                        }
+                    }
+                });
+
+                return results;
+            }
+        </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="assets/global.js"></script>
+    </body>
+
+</html>
